@@ -1,0 +1,26 @@
+<div class="question_content top_content">
+  <div class="question_body">
+    <div class="question_box">
+      <span class="q">Q</span>
+      <span class="question_text"><%= question.text %></span>
+    </div>
+    <div class="answer_box" style="margin-bottom: 10px;">
+      <span class="a">A</span>
+      <span class="answer_text"><%= question.user_answer(@user.id).text %></span>
+      <% if @user.id == current_user.id %>
+        <small class="edit">
+          <%= link_to "編集", edit_answer_path(question.user_answer(@user.id)) %>
+        </small>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<!-- 9行目
+ここで呼び出している user_answerメソッド は、ある特定のquestionのidとuserのidを用いて、指定の質問に対するユーザーの回答をanswersテーブルから取得するメソッドです。ひとつの質問、つまりQuestionクラスのインスタンスに対して使用するため、Questionモデルにこのメソッドは定義していきます。 -->
+
+<!-- 10行目
+表示しているユーザーページが、現在ログインしているユーザーのページである場合のみ「編集」リンクが生成されるよう条件分岐を加えました。
+このことによって、他ユーザーの回答が無闇に編集されてしまう危険を回避しています。
+ -->

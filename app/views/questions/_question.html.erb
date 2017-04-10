@@ -1,0 +1,48 @@
+<div class="question_content top_content">
+  <header class="question_header">
+    <div class="question_image icon_image" style="background-image: url(<%= question.user.avatar.url(:medium) %>);"></div>
+    <div class="question_user_info user_info">
+      <span><%= link_to question.user.name, user_path(question.user) %></span>
+      <time><%= time_ago_in_words question.created_at %></time>
+    </div>
+  </header>
+  <div class="question_body">
+    <div class="question_box">
+      <span class="q">Q</span>
+      <span class="question_text"><%= question.text %></span>
+    </div>
+    
+    <div class="questioned">
+      <%= link_to "回答#{question.answers.count}件", question_path(question) %>
+    </div>
+    <% unless question.answers.exists?(user_id: current_user.id) %>
+      <%= form_tag(new_answer_path, method: :get, class: "question_submit") do %>
+        <%= hidden_field_tag(:question_id, question.id) %>
+        <%= submit_tag("回答する") %>
+      <% end %>
+    <% else %>
+      <div class="answer_other">
+        <h4>※回答済み※</h4>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- time_ago_in_wordsメソッドについて
+投稿時間を「○○時間前」のようにしたい場合に利用するビューヘルパーメソッドです。
+特にgemを追加する必要なく利用することができます。デフォルトだと英語なのでrailsの環境設定を日本語で表示したい場合は、config/application.rbの言語設定を日本語（config.i18n.default_locale = :ja）にしておく必要があります。また、日本語の文言表示のためにconfig/locales以下にja.ymlを配置しておきましょう。
+ -->
+
+<!-- hidden_field_tagについて
+hidden_field_tagは、ユーザーが入力する必要の無い自明のデータをパラメーターとして送信したい時に利用します。
+上記では、:question_id というキーに対して個別のquestionのidを値として設定しています。
+このことにより、パラメーターが送られた先では、params[:question_id] とするだけで簡単に対応する質問のidを取得することができます。 -->
+
+<!-- exists? / present? / blank? メソッド -->
+<!-- .exists? とは、Railsアプリケーションを作成した際にデフォルトで読み込まれる ActiveSupport というgemが実現しているヘルパーメソッドです。メソッドを呼び出したレシーバの中から引数として渡した条件で検索をかけ、データが存在すれば true を、無ければ false を返り値とします。
+あくまでもRubyが元々持つ機能では無いので、irb上などでは動作しないことに注意してください。
+
+似たようなメソッドとして .present? や .blank? もあります。こちらは、レシーバが空であるか否かを判別するものです。例えば、以下のように使うことができます。
+ -->
+
+ 
